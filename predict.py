@@ -29,7 +29,8 @@ def model_fn(model_dir):
 
     # Determine the device and construct the model.
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model = LSTMClassifier(model_info['embedding_dim'], model_info['hidden_dim'], model_info['vocab_size'])
+    model = LSTMClassifier(model_info['embedding_dim'], model_info['hidden_dim'],
+                           model_info['vocab_size'])
 
     # Load the store model parameters.
     model_path = os.path.join(model_dir, 'model.pth')
@@ -69,7 +70,9 @@ def predict_fn(self, input_data, model):
     #       You should produce two variables:
     #         data_X   - A sequence of length 500 which represents the converted review
     #         data_len - The length of the review
-    data_X, data_len = convert_and_pad_data(model.word_dict, [review_to_words(input_data)])
+    words = review_to_words(input_data)
+    data_X, data_len = convert_and_pad(model.word_dict, words)    
+    #data_X, data_len = convert_and_pad_data(model.word_dict, [review_to_words(input_data)])
     #data_X = pd.concat([pd.DataFrame(data_len), pd.DataFrame(data_X)], axis=1)
 
     # Using data_X and data_len we construct an appropriate input tensor. Remember
